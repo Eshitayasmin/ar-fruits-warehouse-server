@@ -69,19 +69,14 @@ async function run() {
       })
 
       //My Item collection api
-      // app.get('/myitem', async (req, res) => {
-      //   const decodedEmail = req.decoded.email;
-      //   const email = req.query.email;
-      //   if (email === decodedEmail) {
-      //     const query = { email: email };
-      //     const cursor = myCollection.find(query);
-      //     const myItems = await cursor.toArray();
-      //     res.send(myItems);
-      //   } 
-      //   else{
-      //     res.status(403).send({ message: 'Forbidden access'});
-      //   }
-      // })
+      app.get('/myitem', async (req, res) => {
+        const email = req.query.email;
+        const query = {email: email};
+        const cursor = inventoryCollection.find(query);
+        const items = await cursor.toArray();
+        res.send(items);
+
+      })
   
       // app.post('/my', async (req, res) => {
       //   const newItem = req.body;
