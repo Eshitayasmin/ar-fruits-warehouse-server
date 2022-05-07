@@ -59,6 +59,22 @@ async function run() {
         const result = await inventoryCollection.insertOne(newItem);
         res.send(result);
       })
+
+      //update user
+      app.put('/inventory/:id', async(req, res) =>{
+        const id = req.params.id;
+        const updatedItem = req.body;
+        const filter = { _id: ObjectId(id) };
+        const options = {upsert : true};
+        const updatedDoc = {
+          $set : {
+            quantity : updatedItem.quantity,
+            name: updatedItem.name
+          }
+        }
+        const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
+        res.send(result);
+      })
   
       //Delete Item
       app.delete('/inventory/:id', async (req, res) => {
@@ -77,12 +93,6 @@ async function run() {
         res.send(items);
 
       })
-  
-      // app.post('/my', async (req, res) => {
-      //   const newItem = req.body;
-      //   const result = await myCollection.insertOne(newItem);
-      //   res.send(result);
-      // })
   
     }
     finally {
