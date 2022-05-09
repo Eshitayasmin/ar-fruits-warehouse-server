@@ -69,21 +69,20 @@ async function run() {
       res.send(result);
     })
 
-    //update user
-    // app.put('/inventory/:id', async(req, res) =>{
-    //   const id = req.params.id;
-    //   const updatedItem = req.body;
-    //   console.log('update', updatedItem);
-    //   const filter = { _id: ObjectId(id) };
-    //   const options = {upsert : true};
-    //   const updatedDoc = {
-    //     $set : {
-    //       updateQuantity : updatedItem.quantity
-    //     }
-    //   }
-    //   const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
-    //   res.send(result);
-    // })
+    // update user
+    app.put('/inventory/:id', async (req, res) => {
+      const id = req.params.id;
+      const updatedItem = req.body;
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: {
+          quantity: updatedItem.quantity
+        },
+      };
+      const result = await inventoryCollection.updateOne(filter, updateDoc, options);
+      res.send(result);
+    })
 
     //Delete Item
     app.delete('/inventory/:id', async (req, res) => {
@@ -117,9 +116,9 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('AR Wareouse');
+  res.send('AR Fruits Wareouse');
 })
 
 app.listen(port, () => {
-  console.log('ar warehouse is running', port);
+  console.log('AR warehouse is running', port);
 })
