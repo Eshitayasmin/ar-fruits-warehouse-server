@@ -47,7 +47,7 @@ async function run() {
       res.send({ accessToken });
     })
 
-    //get inventory
+    //load inventory
     app.get('/inventory', async (req, res) => {
       const query = {};
       const cursor = inventoryCollection.find(query);
@@ -62,7 +62,7 @@ async function run() {
       res.send(item);
     })
 
-    //Add item (POST)
+    //Add item
     app.post('/inventory', async (req, res) => {
       const newItem = req.body;
       const result = await inventoryCollection.insertOne(newItem);
@@ -92,7 +92,7 @@ async function run() {
       res.send(result);
     })
 
-    //My Item collection api
+    //My Item collection
     app.get('/myitem', verifyJWT, async (req, res) => {
       const decodedEmail = req.decoded.email;
       const email = req.query.email;
