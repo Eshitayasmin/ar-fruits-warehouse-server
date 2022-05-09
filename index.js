@@ -47,7 +47,7 @@ async function run() {
       res.send({ accessToken });
     })
 
-    //load inventory
+    //load inventory item
     app.get('/inventory', async (req, res) => {
       const query = {};
       const cursor = inventoryCollection.find(query);
@@ -62,14 +62,14 @@ async function run() {
       res.send(item);
     })
 
-    //Add item
+    //Add new item
     app.post('/inventory', async (req, res) => {
       const newItem = req.body;
       const result = await inventoryCollection.insertOne(newItem);
       res.send(result);
     })
 
-    // update user
+    // update a user
     app.put('/inventory/:id', async (req, res) => {
       const id = req.params.id;
       const updatedItem = req.body;
