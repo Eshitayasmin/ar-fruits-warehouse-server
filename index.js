@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const jwt = require('jsonwebtoken');
 const ObjectId = require('mongodb').ObjectId;
 const port = process.env.PORT || 5000;
 require('dotenv').config();
@@ -37,6 +38,14 @@ async function run() {
       const inventoryCollection = client.db('arWarehouse').collection('inventory');
       const myCollection = client.db('arWarehouse').collection('myItem');
      
+      //Auth
+      app.post('/login', async(req, res) =>{
+        const user = req.body;
+        const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+          expiresIn : '2d'
+        })
+        res.send({accessToken});
+      })
   
       //get inventory
       app.get('/inventory', async (req, res) => {
@@ -61,20 +70,20 @@ async function run() {
       })
 
       //update user
-      app.put('/inventory/:id', async(req, res) =>{
-        const id = req.params.id;
-        const updatedItem = req.body;
-        console.log('update', updatedItem);
-        const filter = { _id: ObjectId(id) };
-        const options = {upsert : true};
-        const updatedDoc = {
-          $set : {
-            updateQuantity : updatedItem.quantity
-          }
-        }
-        const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
-        res.send(result);
-      })
+      // app.put('/inventory/:id', async(req, res) =>{
+      //   const id = req.params.id;
+      //   const updatedItem = req.body;
+      //   console.log('update', updatedItem);
+      //   const filter = { _id: ObjectId(id) };
+      //   const options = {upsert : true};
+      //   const updatedDoc = {
+      //     $set : {
+      //       updateQuantity : updatedItem.quantity
+      //     }
+      //   }
+      //   const result = await inventoryCollection.updateOne(filter, updatedDoc, options);
+      //   res.send(result);
+      // })
   
       //Delete Item
       app.delete('/inventory/:id', async (req, res) => {
@@ -86,6 +95,8 @@ async function run() {
 
       //My Item collection api
       app.get('/myitem', async (req, res) => {
+        const authHeader = req.headers.authorization;
+        console.log(authHeader);
         const email = req.query.email;
         const query = {email: email};
         const cursor = inventoryCollection.find(query);
